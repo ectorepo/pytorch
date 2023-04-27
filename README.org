@@ -1,0 +1,116 @@
+#+title:     Ectorepo: Pytorch
+#+author:    David Conner
+#+email:     noreply@te.xel.io
+
+A list of AMD ROCm repositories. To learn how to use this Repo repo, see the
+the [[https://github.com/ectorepo/ectorepo][ectorepo/ectorepo]] Repo ... repo.
+
+#+begin_src xml :tangle default.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+  <include name="_remotes.xml"/>
+  <default remote="github" sync-j="8" revision="refs/heads/master"/>
+  <include name="pytorch.xml"/>
+</manifest>
+#+end_src
+
+Check rates:
+
+#+begin_src emacs-lisp :results value code :exports code
+(ghub-graphql-rate-limit)
+#+end_src
+
+To avoid confirmations
+
+#+begin_src emacs-lisp
+(setq-local org-confirm-babel-evaluate nil)
+#+end_src
+
+* GraphQL Params
+
+#+name: nrepos
+#+begin_src emacs-lisp :results replace vector value
+100
+#+end_src
+
+#+RESULTS: nrepos
+| 100 |
+
+#+name: gitorg
+#+begin_src emacs-lisp :results replace vector value
+"tensorflow"
+#+end_src
+
+#+RESULTS: gitorg
+| tensorflow |
+
+* PyTorch
+
+Get the core repositories. These should go into =/data/ecto/pytorch/core=.
+
+For some reason =:var nrepos=200= doesn't properly substitute here, so =:noweb
+yes= is required. However, 100 is the max on sorted results anyways.
+
+#+name: gitrepos-query
+#+begin_example graphql
+query ($org:String!) {
+  organization(login:$org){
+    repositories(first:100, orderBy: {field:UPDATED_AT,direction:DESC}){
+      edges{
+        node{
+          owner{login}
+          name
+          defaultBranchRef{prefix name}
+          url
+          updatedAt
+          isArchived}
+      }
+    }
+  }
+}
+#+end_example
+
+#+name: gitrepos
+#+header: :var org="pytorch" query=gitrepos-query
+#+begin_src emacs-lisp :results replace vector value :exports code :noweb yes
+(ghub-graphql
+ query
+ `((org . ,org)))
+#+end_src
+
+#+RESULTS: gitrepos
+| data | (organization (repositories (edges ((node (owner (login . pytorch)) (name . audio) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/audio) (updatedAt . 2023-04-27T00:26:38Z) (isArchived))) ((node (owner (login . pytorch)) (name . pytorch) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/pytorch) (updatedAt . 2023-04-27T00:21:34Z) (isArchived))) ((node (owner (login . pytorch)) (name . torcheval) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torcheval) (updatedAt . 2023-04-26T23:59:52Z) (isArchived))) ((node (owner (login . pytorch)) (name . botorch) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/botorch) (updatedAt . 2023-04-26T23:07:18Z) (isArchived))) ((node (owner (login . pytorch)) (name . rl) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/rl) (updatedAt . 2023-04-26T22:05:54Z) (isArchived))) ((node (owner (login . pytorch)) (name . PiPPy) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/PiPPy) (updatedAt . 2023-04-26T21:18:16Z) (isArchived))) ((node (owner (login . pytorch)) (name . ignite) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/ignite) (updatedAt . 2023-04-26T20:46:25Z) (isArchived))) ((node (owner (login . pytorch)) (name . glow) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/glow) (updatedAt . 2023-04-26T19:27:57Z) (isArchived))) ((node (owner (login . pytorch)) (name . vision) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/vision) (updatedAt . 2023-04-26T19:25:28Z) (isArchived))) ((node (owner (login . pytorch)) (name . examples) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/examples) (updatedAt . 2023-04-26T18:26:50Z) (isArchived))) ((node (owner (login . pytorch)) (name . serve) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/serve) (updatedAt . 2023-04-26T17:53:50Z) (isArchived))) ((node (owner (login . pytorch)) (name . android-demo-app) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/android-demo-app) (updatedAt . 2023-04-26T17:07:58Z) (isArchived))) ((node (owner (login . pytorch)) (name . FBGEMM) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/FBGEMM) (updatedAt . 2023-04-26T16:39:39Z) (isArchived))) ((node (owner (login . pytorch)) (name . tutorials) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/tutorials) (updatedAt . 2023-04-26T16:23:21Z) (isArchived))) ((node (owner (login . pytorch)) (name . data) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/data) (updatedAt . 2023-04-26T15:36:17Z) (isArchived))) ((node (owner (login . pytorch)) (name . text) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/text) (updatedAt . 2023-04-26T13:33:48Z) (isArchived))) ((node (owner (login . pytorch)) (name . captum) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/captum) (updatedAt . 2023-04-26T12:46:46Z) (isArchived))) ((node (owner (login . pytorch)) (name . extension-cpp) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/extension-cpp) (updatedAt . 2023-04-26T12:22:01Z) (isArchived))) ((node (owner (login . pytorch)) (name . torchdynamo) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torchdynamo) (updatedAt . 2023-04-26T10:43:00Z) (isArchived))) ((node (owner (login . pytorch)) (name . builder) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/builder) (updatedAt . 2023-04-26T08:43:25Z) (isArchived))) ((node (owner (login . pytorch)) (name . benchmark) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/benchmark) (updatedAt . 2023-04-26T08:04:51Z) (isArchived))) ((node (owner (login . pytorch)) (name . xla) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/xla) (updatedAt . 2023-04-26T07:07:17Z) (isArchived))) ((node (owner (login . pytorch)) (name . torchrec) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torchrec) (updatedAt . 2023-04-26T04:13:42Z) (isArchived))) ((node (owner (login . pytorch)) (name . ios-demo-app) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/ios-demo-app) (updatedAt . 2023-04-26T02:59:29Z) (isArchived))) ((node (owner (login . pytorch)) (name . hub) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/hub) (updatedAt . 2023-04-26T02:35:43Z) (isArchived))) ((node (owner (login . pytorch)) (name . hydra-torch) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/hydra-torch) (updatedAt . 2023-04-26T00:52:43Z) (isArchived))) ((node (owner (login . pytorch)) (name . cppdocs) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/cppdocs) (updatedAt . 2023-04-25T23:14:22Z) (isArchived))) ((node (owner (login . pytorch)) (name . kineto) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/kineto) (updatedAt . 2023-04-25T21:41:40Z) (isArchived))) ((node (owner (login . pytorch)) (name . contrib) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/contrib) (updatedAt . 2023-04-25T15:49:39Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . cpuinfo) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/cpuinfo) (updatedAt . 2023-04-25T10:55:38Z) (isArchived))) ((node (owner (login . pytorch)) (name . opacus) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/opacus) (updatedAt . 2023-04-25T09:34:25Z) (isArchived))) ((node (owner (login . pytorch)) (name . TensorRT) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/TensorRT) (updatedAt . 2023-04-25T05:36:43Z) (isArchived))) ((node (owner (login . pytorch)) (name . torchx) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torchx) (updatedAt . 2023-04-24T23:10:53Z) (isArchived))) ((node (owner (login . pytorch)) (name . test-infra) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/test-infra) (updatedAt . 2023-04-24T21:02:36Z) (isArchived))) ((node (owner (login . pytorch)) (name . functorch) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/functorch) (updatedAt . 2023-04-24T21:01:09Z) (isArchived))) ((node (owner (login . pytorch)) (name . tnt) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/tnt) (updatedAt . 2023-04-24T13:13:21Z) (isArchived))) ((node (owner (login . pytorch)) (name . tensorpipe) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/tensorpipe) (updatedAt . 2023-04-24T01:28:03Z) (isArchived))) ((node (owner (login . pytorch)) (name . translate) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/translate) (updatedAt . 2023-04-23T17:01:20Z) (isArchived))) ((node (owner (login . pytorch)) (name . csprng) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/csprng) (updatedAt . 2023-04-22T10:25:17Z) (isArchived))) ((node (owner (login . pytorch)) (name . ELF) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/ELF) (updatedAt . 2023-04-22T08:37:23Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . QNNPACK) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/QNNPACK) (updatedAt . 2023-04-22T07:50:40Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . ort) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/ort) (updatedAt . 2023-04-21T11:00:13Z) (isArchived))) ((node (owner (login . pytorch)) (name . torchdistx) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torchdistx) (updatedAt . 2023-04-21T11:00:03Z) (isArchived))) ((node (owner (login . pytorch)) (name . pytorch.github.io) (defaultBranchRef (prefix . refs/heads/) (name . site)) (url . https://github.com/pytorch/pytorch.github.io) (updatedAt . 2023-04-20T11:15:00Z) (isArchived))) ((node (owner (login . pytorch)) (name . multipy) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/multipy) (updatedAt . 2023-04-19T17:42:53Z) (isArchived))) ((node (owner (login . pytorch)) (name . torchsnapshot) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torchsnapshot) (updatedAt . 2023-04-19T15:30:27Z) (isArchived))) ((node (owner (login . pytorch)) (name . torcharrow) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/torcharrow) (updatedAt . 2023-04-19T07:43:21Z) (isArchived))) ((node (owner (login . pytorch)) (name . nestedtensor) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/nestedtensor) (updatedAt . 2023-04-18T16:48:25Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . java-demo) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/java-demo) (updatedAt . 2023-04-16T09:29:36Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . maskedtensor) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/maskedtensor) (updatedAt . 2023-04-13T15:04:29Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . pytorch_sphinx_theme) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/pytorch_sphinx_theme) (updatedAt . 2023-04-13T01:57:00Z) (isArchived))) ((node (owner (login . pytorch)) (name . accimage) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/accimage) (updatedAt . 2023-04-11T21:27:01Z) (isArchived))) ((node (owner (login . pytorch)) (name . workshops) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/workshops) (updatedAt . 2023-04-11T02:18:02Z) (isArchived))) ((node (owner (login . pytorch)) (name . rfcs) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/rfcs) (updatedAt . 2023-04-10T00:03:38Z) (isArchived))) ((node (owner (login . pytorch)) (name . tvm) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/tvm) (updatedAt . 2023-04-06T07:28:07Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . extension-script) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/extension-script) (updatedAt . 2023-04-03T15:20:15Z) (isArchived))) ((node (owner (login . pytorch)) (name . extension-ffi) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/extension-ffi) (updatedAt . 2023-03-31T04:17:24Z) (isArchived))) ((node (owner (login . pytorch)) (name . elastic) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/elastic) (updatedAt . 2023-03-11T21:32:41Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . ossci-job-dsl) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/ossci-job-dsl) (updatedAt . 2023-03-01T16:01:23Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . labeler-github-action) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/labeler-github-action) (updatedAt . 2023-01-28T11:39:54Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . pytorch-ci-dockerfiles) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/pytorch-ci-dockerfiles) (updatedAt . 2023-01-28T09:47:57Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . dr-ci) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/dr-ci) (updatedAt . 2023-01-28T08:38:23Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . probot) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/probot) (updatedAt . 2023-01-28T03:49:01Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . ci-hud) (defaultBranchRef (prefix . refs/heads/) (name . main)) (url . https://github.com/pytorch/ci-hud) (updatedAt . 2023-01-28T01:49:06Z) (isArchived . t))) ((node (owner (login . pytorch)) (name . pytorch-integration-testing) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/pytorch-integration-testing) (updatedAt . 2022-08-05T08:48:53Z) (isArchived))) ((node (owner (login . pytorch)) (name . add-annotations-github-action) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/add-annotations-github-action) (updatedAt . 2022-08-05T07:43:56Z) (isArchived))) ((node (owner (login . pytorch)) (name . caffe2.github.io) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/caffe2.github.io) (updatedAt . 2022-02-23T07:31:07Z) (isArchived))) ((node (owner (login . pytorch)) (name . sccache) (defaultBranchRef (prefix . refs/heads/) (name . master)) (url . https://github.com/pytorch/sccache) (updatedAt . 2020-06-07T21:44:41Z) (isArchived)))))) |
+
+
+Filter the results, generate XML
+
+#+name: gitreposet
+#+begin_src emacs-lisp :var gqldata=gitrepos subdir="core" :results value html
+(thread-first
+  (thread-last
+    (a-get* (nthcdr 0 gqldata) 'data 'organization 'repositories 'edges)
+    (mapcar (lambda (el) (a-get* el 'node)))
+    (seq-filter (lambda (el) (not (a-get* el 'isArchived))))
+    (mapcar (lambda (el)
+              (let* (;; (defaultBranchRef (a-get* 'defaultBranchRef))
+                     (path (a-get* el 'name))
+                     (ref (concat (a-get* el 'defaultBranchRef 'prefix)
+                                  (a-get* el 'defaultBranchRef 'name)))
+                     (name (string-join (list (a-get* el 'owner 'login)
+                                              (a-get* el 'name)) "/")))
+                (concat "<project"
+                        " name=\"" name
+                        "\" path=\"" (concat subdir "/" path)
+                        "\" revision=\"" ref "\" remote=\"github\"/>")))))
+  (cl-sort 'string-lessp :key 'downcase)
+  (string-join "\n"))
+#+end_src
+
+Generate =rocm_software_platform.xml=
+
+#+begin_src xml :tangle pytorch.xml :noweb yes
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+  <<gitreposet(gqldata=gitrepos,subdir="core")>>
+</manifest>
+#+end_src
